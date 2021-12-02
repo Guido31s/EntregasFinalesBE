@@ -1,18 +1,28 @@
 let { Router } = require("express");
 let router = new Router();
 let productsController = require("./productsController/productsController");
+let mongoProductController = require("./productsController/mongoDBProductController");
 
+//Usar Product Controller desde Firebase
+let firebaseProductController = require("./productsController/firebaseProductController");
 let Admin = false;
 
 module.exports = (app) => {
     app.use("/", router);
 
-        if(Admin) {
+        // if(Admin) {
 
-            router.get("/api/productos", (req, res)=> {
-                let response = productsController.getAll();
-                res.json(response)
-            })
+            // router.get("/api/productos", (req, res)=> {
+            //     // let response = productsController.getAll();
+            //     let response = mongoProductController.getAll()
+            //     res.json(response)
+            // })
+
+            //Product Controller desde MongoDB
+            router.get("/api/productos", mongoProductController.getAll)
+            router.post("/api/productos", mongoProductController.newProd)
+            router.put("/api/productos", mongoProductController.updateProd)
+            router.delete("/api/productos", mongoProductController.deleteProd)
             
             router.get("/api/productos/:id", (req, res)=> {
                 let { id } = req.params
@@ -37,21 +47,24 @@ module.exports = (app) => {
                     res.json(response)
             })
 
-        } else {
+        // } else {
             
-            router.get("/api/productos", (req, res)=> {
-                let response = productsController.getAll();
-                res.json(response)
-            })
+        //      // router.get("/api/productos", (req, res)=> {
+        //     //     // let response = productsController.getAll();
+        //     //     let response = mongoProductController.getAll()
+        //     //     res.json(response)
+        //     // })
+
+        //     // router.get("/api/productos", mongoProductController.getAll)
             
-            router.get("/api/productos/:id", (req, res)=> {
-                let { id } = req.params
-                let response = productsController.getProdById(parseInt(id));
-                res.json(response)
-            })
+        //     // router.get("/api/productos/:id", (req, res)=> {
+        //     //     let { id } = req.params
+        //     //     let response = productsController.getProdById(parseInt(id));
+        //     //     res.json(response)
+        //     // })
             
             
-        }
+        // }
 
 
 }
